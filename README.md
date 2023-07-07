@@ -2,7 +2,7 @@
 `Project No.9`
 
 ## Purpose
-Practice use of `JavaScript Objects and Factory FUnctions`
+Practice use of `JavaScript Objects, Factory Functions and Modules`
 
 ## Skills Used
 1. JavaScript
