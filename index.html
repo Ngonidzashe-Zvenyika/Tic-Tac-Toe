@@ -5,9 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="./script.js"></script>
+    <script src="./script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+    <main>
+        <section class="title-screen">
+            <h1>Tic Tac Toe</h1>
+            <button class="start" type="button">Start Game</button>
+        </section>
+
+        <section class="form-screen">
+            <form action="" methhod="">
+                <div>
+                    <label for="player-one"></label>
+                    <input type="text" name="player-one" id="player-one" placeholder="Player 1" required>
+                </div>
+                <div>
+                    <label for="player-two"></label>
+                    <input type="text" name="player-two" id="player-two" placeholder="Player 2" required>
+                </div>
+                <div>
+                    <button class="form" type="submit">Submit</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="game-screen">
+            <h1>Tic Tac Toe</h1>
+            <div class="players-display-container">
+                <p class="player-one-display"></p>
+                <p class="player-two-display"></p>
+            </div>
+            <div class="grid"></div>
+            <div class="button-container">
+                <button class="restart" type="button">Restart</button>
+                <button class="back" type="button">Go back</button>
+            </div>
+        </section>
+
+        <section class="result">
+            <p class="message"></p>
+            <div class="button-container">
+                <button class="home" type="button">Home</button>
+                <button class="play-again" type="button">Play again</button>
+            </div>
+        </section>
+
+        <div class="overlay"></div>
+
+    </main>
+    <footer>Made by <a href="https://github.com/Ngonidzashe-Zvenyika">Ngonidzashe Zvenyika</a></footer>
 </body>
 </html>
