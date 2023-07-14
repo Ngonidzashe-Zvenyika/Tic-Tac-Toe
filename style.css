@@ -1,0 +1,199 @@
+:root {
+    font-size: 62.5%; 
+}
+
+*, *::before, *::after {
+    font-family: Sriracha, Arial, sans-serif, system-ui, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1.6rem;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-width: fit-content;
+    max-width: 2560px;
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: auto;
+}
+
+main {
+    flex: 1;
+    display: flex;
+}
+
+section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 3.2rem;
+    letter-spacing: 2px;
+}
+
+button {
+    border: none;
+    outline: none;
+    appearance: none; 
+    border: 2px solid black;
+    border-radius: 10px; 
+    background-color: hsl(0, 0%, 90%);
+}
+
+button:hover {
+    cursor: pointer;
+    box-shadow: 2px 2px 2px hsl(0, 0%, 0%);               
+}
+
+button:focus {
+    background-color: hsl(0, 0%, 80%);  
+}
+
+.title-screen {
+    gap: 30px;
+}
+
+.title-screen button {
+    width: 200px;
+    padding: 5px;
+}
+
+form {
+    display: grid;
+    justify-items: center;
+    gap: 20px;
+    padding: 20px;
+    border: 2px solid hsl(0, 0%, 0%);
+    border-radius: 10px;
+    background-color: hsl(0, 100%, 80%);
+}
+
+input {
+    border: none;
+    outline: none;
+    appearance: none;
+    padding: 5px 10px;
+    border: 2px solid hsl(0, 0%, 0%);
+    border-radius: 5px;
+}
+
+input:focus::placeholder {
+    visibility: hidden;
+}
+
+form button {
+    width: 150px;
+    padding: 5px 0px;
+}
+
+.game-screen {
+    display: grid;
+    grid-template-columns: minmax(250px, 400px);
+    grid-template-rows: repeat(4, auto) 1fr;
+    justify-content: center;
+    gap: 20px;
+}
+
+.game-screen h1 {
+    justify-self: center;
+}
+
+.players-display-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.players-display-container p {
+    font-size: 1.8rem;
+    text-align: center;
+    width: calc(50% - 10px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.grid {
+    aspect-ratio: 1 / 1;
+    display: grid;
+    grid-template-columns: repeat(3, 30%);
+    grid-template-rows: repeat(3, 30%);
+    gap: 5%;
+    padding: 20px;
+}
+
+.grid:hover {
+    cursor: default;
+}
+
+.square {
+    font-size: clamp(5.6rem, 22vw, 8rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    box-shadow: inset 3px 3px 5px black;
+    background-color:hsl(0, 0%, 80%);
+}
+
+.game-screen .button-container {
+    display: grid;
+    gap: 20px;
+}
+
+.game-screen button {
+    padding: 10px 0px;
+}
+
+.result {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    min-width: 250px;
+    gap: 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+    background-color: white;
+}
+
+.message {
+    font-size: 2.4rem;
+    overflow-wrap: anywhere;
+}
+
+.result .button-container {
+    display: flex;
+    gap: 20px;
+}
+
+.result button {
+    width: 100px;
+    padding: 5px 0px;
+}
+
+.overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: hsla(0, 0%, 0%, 0.5);
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0px;
+}
