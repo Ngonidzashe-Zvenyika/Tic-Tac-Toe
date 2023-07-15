@@ -27,7 +27,7 @@ main {
 
 section {
     flex: 1;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -58,6 +58,7 @@ button:focus {
 }
 
 .title-screen {
+    display: flex;
     gap: 30px;
 }
 
@@ -95,7 +96,6 @@ form button {
 }
 
 .game-screen {
-    display: grid;
     grid-template-columns: minmax(250px, 400px);
     grid-template-rows: repeat(4, auto) 1fr;
     justify-content: center;
@@ -155,7 +155,7 @@ form button {
     padding: 10px 0px;
 }
 
-.result {
+.result-screen {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -173,12 +173,12 @@ form button {
     overflow-wrap: anywhere;
 }
 
-.result .button-container {
+.result-screen .button-container {
     display: flex;
     gap: 20px;
 }
 
-.result button {
+.result-screen button {
     width: 100px;
     padding: 5px 0px;
 }
