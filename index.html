@@ -17,8 +17,23 @@
             <button class="start" type="button">Start Game</button>
         </section>
 
-        <section class="form-screen">
-            <form action="" methhod="">
+        <section class="opponent-screen">
+            <form action="" method="">
+                <div>
+                    <label for="opponent-choice"></label>
+                    <select name="opponent-choice" id="opponent-choice">
+                        <option value="computer">vs. Computer</option>
+                        <option value="player">vs. Player</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="submit-opponent" type="submit">Submit</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="name-screen">
+            <form action="" method="">
                 <div>
                     <label for="player-one"></label>
                     <input type="text" name="player-one" id="player-one" placeholder="Player 1" required>
@@ -28,7 +43,7 @@
                     <input type="text" name="player-two" id="player-two" placeholder="Player 2" required>
                 </div>
                 <div>
-                    <button class="submit-form" type="submit">Submit</button>
+                    <button class="submit-names" type="submit">Submit</button>
                 </div>
             </form>
         </section>

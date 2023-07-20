@@ -6,10 +6,12 @@ function NewCell() {
 }
 
 
-function NewPlayer(name, value) {
+function NewPlayer(name, value, type) {
+    const getType = () => type;
+    const setType = (newType) => type = newType;
     const getName = () => name;
     const getValue = () => value;
-    return {getName, getValue};
+    return {getName, getValue, getType, setType};
 }
 
 
@@ -31,7 +33,9 @@ const gameBoard = (() => {
 
     const boardIsFull = () => board.every(row => row.every(cell => cell.getValue() !== ""));
 
-    return {getBoard, boardIsFull, clearBoard};
+    const getAvailableSquares = () => board.filter(row => row.filter(cell => cell === ""));
+
+    return {getBoard, boardIsFull, clearBoard, getAvailableSquares};
 })();
 
 const gameController = (() => {
@@ -55,52 +59,58 @@ const gameController = (() => {
         ]
 
         for (let i = 0; i < winConditions.length; ++i) {
-            switch (true) {
-                case (winConditions[i].every(cell => cell.getValue() === winConditions[i][0].getValue() && cell.getValue() !== "")):
-                    const winner = (playerOne.getValue() === winConditions[i][0].getValue()) ? playerOne.getName() : playerTwo.getName();
-                    message = `${winner} wins!`
-                    gameOver = true;
-                    break;
-                case (gameBoard.boardIsFull()):
-                    message = `It is a draw.`;
-                    gameOver = true;
-                    break;
+            if (winConditions[i].every(cell => cell.getValue() === winConditions[i][0].getValue() && cell.getValue() !== "")) {
+                const winner = (playerOne.getValue() === winConditions[i][0].getValue()) ? playerOne.getName() : playerTwo.getName();
+                message = `${winner} wins!`
+                gameOver = true;
             }
         }
 
-        return ;
+        if (gameOver === false && gameBoard.boardIsFull() === true) {
+            message = `It is a draw.`;
+            gameOver = true;
+        }
+
     }
 
     const changeCurrentPlayer = () => currentPlayer = (currentPlayer === playerOne) ? playerTwo : playerOne;
 
-    const setPlayers = () => {
-        const inputs = Array.from(document.querySelectorAll("input"));
-        const formValid = inputs.every(input => input.value !== "");
-        if (formValid === true) {
-            playerOne = NewPlayer(inputs[0].value, "X");
-            playerTwo = NewPlayer(inputs[1].value, "O");
-            currentPlayer = playerOne;
-        }
+    const setPlayers = (inputs, opponent) => {
+        playerOne = NewPlayer(inputs[0], "X", "player");
+        playerTwo = NewPlayer(inputs[1], "O", "player");
+        if (opponent === "computer") playerTwo.setType("computer");
+        currentPlayer = playerOne;
 
         getPlayerOneName = () => playerOne.getName();
         getPlayerTwoName = () => playerTwo.getName();
-        return {formValid, getPlayerOneName, getPlayerTwoName};
+        return {getPlayerOneName, getPlayerTwoName};
     }
 
     const play = (cell) => {
-        let returnValue = false;
         if (cell.getValue() === "" && gameOver === false) {
             cell.setValue(currentPlayer.getValue());
             checkGameStatus();
-            if (gameOver === true) {
-                returnValue = gameOver;
-                gameOver = false;
-            } else {
-                changeCurrentPlayer();
-            }
         }
-        return returnValue;
+        if (gameOver === false) {
+            changeCurrentPlayer();
+            displayController.displayGrid();
+            if (currentPlayer.getType() === "computer") playComputer();
+        } else if (gameOver === true) {
+            displayController.displayGameResult();
+            gameOver = false;
+        } 
     }
+
+    const playComputer = () => {
+        let availableCells = [];
+        board.forEach(row => row.forEach(cell => {
+            if (cell.getValue() === "") availableCells.push(cell);
+        }));
+        const randomCell = Math.floor((Math.random()*availableCells.length));
+        play(availableCells[randomCell]);
+    }
+
+
 
     const getCurrentPlayer = () => currentPlayer;
     const setCurrentPlayer = () => currentPlayer = playerOne;
@@ -118,7 +128,8 @@ const displayController = (()=> {
     const board = gameBoard.getBoard();
     const buttons = document.querySelectorAll("button");
     const titleScreen = document.querySelector(".title-screen");
-    const formScreen = document.querySelector(".form-screen");
+    const opponentScreen = document.querySelector(".opponent-screen");
+    const nameScreen = document.querySelector(".name-screen");
     const gameScreen = document.querySelector(".game-screen");
     const playerOneDisplay = document.querySelector(".player-one-display");
     const playerTwoDisplay = document.querySelector(".player-two-display");
@@ -130,12 +141,7 @@ const displayController = (()=> {
         let array = [];
         board.forEach(row => row.forEach(cell => array.push(cell)));
         squares.forEach((square, index) => square.addEventListener("click", () => {
-            const gameOver = gameController.play(array[index]);
-            if (gameOver === false) {
-                displayGrid();
-            } else if (gameOver === true) {
-                displayGameResult();
-            } else console.log(turn);
+            gameController.play(array[index]);
         }));
     }
 
@@ -179,19 +185,41 @@ const displayController = (()=> {
             switch (true) {
                 case (button.classList.contains("start")):
                     titleScreen.style.display = "none";
-                    formScreen.style.display = "flex";
+                    opponentScreen.style.display = "flex";
                     break;
 
-                case (button.classList.contains("submit-form")):
-                    const game = gameController.setPlayers();
-                    if (game.formValid === true) {
-                        event.preventDefault();
-                        const playerOneName = game.getPlayerOneName();
-                        const playerTwoName = game.getPlayerTwoName();
+                case (button.classList.contains("submit-opponent")):
+                    event.preventDefault()
+                    const opponent = document.querySelector("select").value;
+                    if (opponent === "player") {
+                        opponentScreen.style.display = "none";
+                        nameScreen.style.display = "flex";
+                    } else {
+                        const vsComputer = ["Player", "Computer"];
+                        const computerGame = gameController.setPlayers(vsComputer, "computer");
+                        const playerOneName = computerGame.getPlayerOneName();
+                        const playerTwoName = computerGame.getPlayerTwoName();
                         playerOneDisplay.innerText = playerOneName;
                         playerTwoDisplay.innerText = playerTwoName;
                         displayGrid();
-                        formScreen.style.display = "none";
+                        opponentScreen.style.display = "none";
+                        gameScreen.style.display = "grid";
+                    }
+                    break;
+
+                case (button.classList.contains("submit-names")):
+                    const inputs = Array.from(document.querySelectorAll("input"));
+                    const vsPlayer = inputs.map(input => input.value);
+                    const formValid = vsPlayer.every(input => input !== "");
+                    if (formValid === true) {
+                        event.preventDefault();
+                        const playerGame = gameController.setPlayers(vsPlayer, "player");
+                        const playerOneName = playerGame.getPlayerOneName();
+                        const playerTwoName = playerGame.getPlayerTwoName();
+                        playerOneDisplay.innerText = playerOneName;
+                        playerTwoDisplay.innerText = playerTwoName;
+                        displayGrid();
+                        nameScreen.style.display = "none";
                         gameScreen.style.display = "grid";
                     }
                     break;
@@ -226,4 +254,6 @@ const displayController = (()=> {
             }
         })
     })
+
+    return {displayGrid, displayGameResult}
 })();

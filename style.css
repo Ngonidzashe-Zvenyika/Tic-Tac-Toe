@@ -2,7 +2,7 @@
     font-size: 62.5%; 
 }
 
-*, *::before, *::after {
+*, ::before, ::after {
     font-family: Sriracha, Arial, sans-serif, system-ui, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 1.6rem;
     margin: 0;
@@ -53,7 +53,7 @@ button:hover {
     box-shadow: 2px 2px 2px hsl(0, 0%, 0%);               
 }
 
-button:focus {
+button:focus, select:focus {
     background-color: hsl(0, 0%, 80%);  
 }
 
@@ -75,6 +75,15 @@ form {
     border: 2px solid hsl(0, 0%, 0%);
     border-radius: 10px;
     background-color: hsl(0, 100%, 80%);
+}
+
+select {
+    outline: none;
+    font-size: 1.8rem;
+    padding: 5px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    border: 2px solid black;
 }
 
 input {
