@@ -77,6 +77,11 @@ form {
     background-color: hsl(0, 100%, 80%);
 }
 
+form div:last-child {
+    display: grid;
+    gap: 20px;
+}
+
 select {
     outline: none;
     font-size: 1.8rem;

@@ -22,12 +22,13 @@
                 <div>
                     <label for="opponent-choice"></label>
                     <select name="opponent-choice" id="opponent-choice">
-                        <option value="computer">vs. Computer</option>
                         <option value="player">vs. Player</option>
+                        <option value="computer">vs. Easy Computer</option>
+                        <option value="ai">vs. Unbeatable AI</option>
                     </select>
                 </div>
                 <div>
-                    <button class="submit-opponent" type="submit">Submit</button>
+                    <button class="select-opponent" type="submit">Play</button>
                 </div>
             </form>
         </section>
@@ -43,7 +44,8 @@
                     <input type="text" name="player-two" id="player-two" placeholder="Player 2" required>
                 </div>
                 <div>
-                    <button class="submit-names" type="submit">Submit</button>
+                    <button class="submit-names" type="submit">Proceed To Game</button>
+                    <button class="back-from-form" type="button">Go back</button>
                 </div>
             </form>
         </section>
@@ -57,7 +59,7 @@
             <div class="grid"></div>
             <div class="button-container">
                 <button class="restart" type="button">Restart</button>
-                <button class="back" type="button">Go back</button>
+                <button class="back-from-game" type="button">Go back</button>
             </div>
         </section>
 
