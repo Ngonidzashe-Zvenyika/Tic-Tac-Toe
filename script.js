@@ -147,7 +147,7 @@ const gameController = (() => {
                     const boardCopy = board.map(row => row.map(cell => cell));
                     boardCopy[currentMove.row][currentMove.column] = "X";
                     const [maxScore, ] = minimax(boardCopy, alpha, beta, true);
-                    if (maxScore < minScore) {
+                    if (maxScore <= minScore) {
                         minScore = maxScore;
                     } 
                     beta = Math.min(beta, maxScore);
