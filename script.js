@@ -91,10 +91,10 @@ const gameController = (() => {
 
     const aiTurn = () => {
         const boardCopy = board.map(row => row.map(cell => cell.getValue()));
-        const [, bestMove] = minimax(boardCopy, -1, 1, true);
+        const [, bestMove] = minimax(boardCopy, -1, 1, 0, true);
         playTurn(board[bestMove.row][bestMove.column]);
 
-        function minimax(board, alpha, beta, maxPlayer) {
+        function minimax(board, alpha, beta, depth, maxPlayer) {
             const winConditions = [
                 board[0],
                 board[1],
@@ -109,12 +109,12 @@ const gameController = (() => {
             for (let i = 0; i < winConditions.length; ++i) {
                 const condition = winConditions[i];
                 if (condition.every(cell => cell === condition[0] && cell !== "")) {
-                    return (condition[0] === "X") ? [-1, ""] : [1, ""];
+                    return (condition[0] === "X") ? [-1, "", depth] : [1, "", depth];
                 }
             }
     
             if (board.every(row => row.every(cell => cell !== ""))) {
-                return [0, ""];
+                return [0, "", depth];
             }
 
             let availableMoves = [];
@@ -124,14 +124,20 @@ const gameController = (() => {
 
             if (maxPlayer === true) {
                 let maxScore = -1;
+                let maxDepth = 8;
                 let bestMove;
                 for (let i = 0; i < availableMoves.length; ++i) {
                     const currentMove = availableMoves[i];
                     const boardCopy = board.map(row => row.map(cell => cell));
                     boardCopy[currentMove.row][currentMove.column] = "O";
-                    const [minScore, ] = minimax(boardCopy, alpha, beta, false);
-                    if (minScore >= maxScore) {
+                    const [minScore, , minDepth] = minimax(boardCopy, alpha, beta, depth + 1, false);
+                    if (minScore > maxScore) {
                         maxScore = minScore;
+                        maxDepth = minDepth;
+                        bestMove = currentMove;
+                    } else if (maxScore === minScore && minDepth < maxDepth) {
+                        maxScore = minScore;
+                        maxDepth = minDepth;
                         bestMove = currentMove;
                     }
                     alpha = Math.max(alpha, minScore);
@@ -139,23 +145,28 @@ const gameController = (() => {
                         break;
                     }
                 }
-                return [maxScore, bestMove];
+                return [maxScore, bestMove, maxDepth];
             } else {
                 let minScore = 1;
+                let maxDepth = 8;
                 for (let i = 0; i < availableMoves.length; ++i) {
                     const currentMove = availableMoves[i];
                     const boardCopy = board.map(row => row.map(cell => cell));
                     boardCopy[currentMove.row][currentMove.column] = "X";
-                    const [maxScore, ] = minimax(boardCopy, alpha, beta, true);
-                    if (maxScore <= minScore) {
+                    const [maxScore, , minDepth] = minimax(boardCopy, alpha, beta, depth + 1, true);
+                    if (maxScore < minScore) {
                         minScore = maxScore;
-                    } 
+                        maxDepth = minDepth;
+                    } else if (minScore === maxScore && minDepth < maxDepth) {
+                        minScore = maxScore;
+                        maxDepth = minDepth;
+                    }
                     beta = Math.min(beta, maxScore);
                     if (beta < alpha) {
                         break;
                     }
                 }
-                return [minScore, ""];
+                return [minScore, "", maxDepth];
             }
         }
     }
