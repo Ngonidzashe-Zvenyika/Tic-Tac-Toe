@@ -1,11 +1,4 @@
-function NewCell() {
-    let value = ""
-    const getValue = () => value;
-    const setValue = (newValue) => value = newValue;
-    return {getValue, setValue}
-}
-
-
+//This constructor function creates a new player object;
 function NewPlayer(name, value, description) {
     const getName = () => name;
     const getValue = () => value;
@@ -13,7 +6,15 @@ function NewPlayer(name, value, description) {
     return {getName, getValue, getDescription};
 }
 
+//This constructo function creates a new cell object;
+function NewCell() {
+    let value = ""
+    const getValue = () => value;
+    const setValue = (newValue) => value = newValue;
+    return {getValue, setValue}
+}
 
+//This module contains the main board and all the functions that relate to it;
 const gameBoard = (() => {
     let board = [];
     for (let i = 0; i < 3; ++i) {
@@ -46,7 +47,7 @@ const gameBoard = (() => {
     return {getBoard, clearBoard, checkBoardIsFull, getAvailableCells, getBoardCopy};
 })();
 
-
+// This module contains all the functions that relate to the flow of the game, decide player turns, and check if the game is over;
 const gameController = (() => {
     const board = gameBoard.getBoard();
     let message;
@@ -66,7 +67,6 @@ const gameController = (() => {
             [board[0][0], board[1][1], board[2][2]],
             [board[0][2], board[1][1], board[2][0]],
         ]
-
         for (let i = 0; i < winConditions.length; ++i) {
             const condition = winConditions[i];
             if (condition.every(cell => cell.getValue() === condition[0].getValue() && cell.getValue() !== "")) {
@@ -76,7 +76,6 @@ const gameController = (() => {
                 break;
             }
         }
-
         if (gameOver === false && gameBoard.checkBoardIsFull() === true) {
             message = `It is a draw.`;
             gameOver = true;
@@ -89,11 +88,8 @@ const gameController = (() => {
         playTurn(availableCells[randomCell]);
     }
 
+    // This function within the gameController module uses destructuring assignment syntax for the minimax algorithm which returns multiple values in an array and determines the best move for the ai by calling itself until it reaches an end state - recursion;
     const aiTurn = () => {
-        const boardCopy = board.map(row => row.map(cell => cell.getValue()));
-        const [, bestMove] = minimax(boardCopy, -1, 1, 0, true);
-        playTurn(board[bestMove.row][bestMove.column]);
-
         function minimax(board, alpha, beta, depth, maxPlayer) {
             const winConditions = [
                 board[0],
@@ -105,70 +101,70 @@ const gameController = (() => {
                 [board[0][0], board[1][1], board[2][2]],
                 [board[0][2], board[1][1], board[2][0]],
             ]
-    
             for (let i = 0; i < winConditions.length; ++i) {
                 const condition = winConditions[i];
                 if (condition.every(cell => cell === condition[0] && cell !== "")) {
-                    return (condition[0] === "X") ? [-1, "", depth] : [1, "", depth];
+                    return (condition[0] === "X") ? [-1,"",depth] : [1,"",depth];
                 }
             }
-    
             if (board.every(row => row.every(cell => cell !== ""))) {
-                return [0, "", depth];
+                return [0,"",depth];
             }
-
             let availableMoves = [];
             board.map((row, i) => row.filter((move, j) => {
                 if(move === "") availableMoves.push({row: i, column: j});
             }));
-
             if (maxPlayer === true) {
-                let maxScore = -1;
+                let highestScore = -1;
                 let maxDepth = 8;
                 let bestMove;
                 for (let i = 0; i < availableMoves.length; ++i) {
                     const currentMove = availableMoves[i];
                     const boardCopy = board.map(row => row.map(cell => cell));
                     boardCopy[currentMove.row][currentMove.column] = "O";
-                    const [minScore, , minDepth] = minimax(boardCopy, alpha, beta, depth + 1, false);
-                    if (minScore > maxScore) {
-                        maxScore = minScore;
+                    const [lowestScore, ,minDepth] = minimax(boardCopy, alpha, beta, depth + 1, false);
+                    if (lowestScore > highestScore) {
+                        highestScore = lowestScore;
                         maxDepth = minDepth;
                         bestMove = currentMove;
-                    } else if (maxScore === minScore && minDepth < maxDepth) {
-                        maxScore = minScore;
+                    } else if (highestScore === lowestScore && minDepth < maxDepth) {
+                        highestScore = lowestScore;
                         maxDepth = minDepth;
                         bestMove = currentMove;
                     }
-                    alpha = Math.max(alpha, minScore);
+                    alpha = Math.max(alpha, lowestScore);
                     if (alpha > beta) {
                         break;
                     }
                 }
-                return [maxScore, bestMove, maxDepth];
+                return [highestScore, bestMove, maxDepth];
             } else {
-                let minScore = 1;
+                let lowestScore = 1;
                 let maxDepth = 8;
                 for (let i = 0; i < availableMoves.length; ++i) {
                     const currentMove = availableMoves[i];
                     const boardCopy = board.map(row => row.map(cell => cell));
                     boardCopy[currentMove.row][currentMove.column] = "X";
-                    const [maxScore, , minDepth] = minimax(boardCopy, alpha, beta, depth + 1, true);
-                    if (maxScore < minScore) {
-                        minScore = maxScore;
+                    const [highestScore, ,minDepth] = minimax(boardCopy, alpha, beta, depth + 1, true);
+                    if (highestScore < lowestScore) {
+                        lowestScore = highestScore;
                         maxDepth = minDepth;
-                    } else if (minScore === maxScore && minDepth < maxDepth) {
-                        minScore = maxScore;
+                    } else if (lowestScore === highestScore && minDepth < maxDepth) {
+                        lowestScore = highestScore;
                         maxDepth = minDepth;
                     }
-                    beta = Math.min(beta, maxScore);
+                    beta = Math.min(beta, highestScore);
                     if (beta < alpha) {
                         break;
                     }
                 }
-                return [minScore, "", maxDepth];
+                return [lowestScore,"",maxDepth];
             }
         }
+
+        const boardCopy = gameBoard.getBoardCopy();
+        const [score, bestMove] = minimax(boardCopy, -1, 1, 0, true);
+        playTurn(board[bestMove.row][bestMove.column]);
     }
 
     const setPlayers = (players, vs) => {
@@ -184,7 +180,6 @@ const gameController = (() => {
         displayController.displayGrid();
         getPlayerOneName = () => playerOne.getName();
         getPlayerTwoName = () => playerTwo.getName();
-
         return {getPlayerOneName, getPlayerTwoName};
     }
 
@@ -205,13 +200,15 @@ const gameController = (() => {
     }
 
     const getCurrentPlayer = () => currentPlayer;
+
     const setCurrentPlayer = () => currentPlayer = playerOne;
+
     const getMessage = () => message;
 
     return {setPlayers, playTurn, getCurrentPlayer, setCurrentPlayer, getMessage};
 })();
 
-
+// This module contains all the functions that relate to displaying the progress of the game to the users, event listeners etc;
 const displayController = (()=> {
     const board = gameBoard.getBoard();
     const buttons = document.querySelectorAll("button");
